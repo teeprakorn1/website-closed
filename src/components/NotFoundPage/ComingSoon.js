@@ -57,9 +57,6 @@ const GithubIcon = () => (
     </svg>
 );
 
-// ─────────────────────────────────────────
-// Shared Overlay + Popup Shell
-// ─────────────────────────────────────────
 function EggOverlay({ active, onClose, children, withMatrix }) {
     const canvasRef = useRef(null);
 
@@ -121,16 +118,13 @@ function EggPopup({ title, closeLabel = "[ ESC ] close", onClose, children }) {
     );
 }
 
-// ─────────────────────────────────────────
-// Easter Egg 1 — type "aiyulis" → Matrix Rain + secret popup
-// ─────────────────────────────────────────
 function EasterEgg1({ active, onClose }) {
     return (
         <EggOverlay active={active} onClose={onClose} withMatrix>
             <EggPopup title="secret.log" onClose={onClose}>
                 <p><span className={eggStyles.ok}>[FOUND]</span> aiyulis.easter_egg — unlocked</p>
-                <p><span className={eggStyles.cm}>{'// สวัสดี คนขยัน 👾'}</span></p>
-                <p><span className={eggStyles.cm}>{'// ยินดีที่เจอ easter egg นี้'}</span></p>
+                <p><span className={eggStyles.cm}>{'// สวัสดี คนขยัน'}</span></p>
+                <p><span className={eggStyles.cm}>{'// ยินดีที่เจอระบบนี้'}</span></p>
                 <p><span className={eggStyles.prompt}>$ </span>cat /secret/message.txt</p>
                 <p className={eggStyles.secret}>
                     "the website isn't done.<br />
@@ -143,28 +137,22 @@ function EasterEgg1({ active, onClose }) {
     );
 }
 
-// ─────────────────────────────────────────
-// Easter Egg 2 — click "COMING" 5x → debug popup
-// ─────────────────────────────────────────
 function EasterEgg2({ active, onClose }) {
     return (
         <EggOverlay active={active} onClose={onClose}>
             <EggPopup title="debug.log — COMING x5" onClose={onClose}>
                 <p><span className={eggStyles.warn}>[WARN]</span> title clicked 5 times</p>
                 <p><span className={eggStyles.ok}>[OK]</span> patience.exe detected</p>
-                <p><span className={eggStyles.cm}>{'// นายคลิกซ้ำๆ จริงๆ เหรอ 💀'}</span></p>
+                <p><span className={eggStyles.cm}>{'// นายคลิกมันซ้ำๆ จริงๆเหรอ ไม่น่าเชื่อเลย'}</span></p>
                 <p><span className={eggStyles.prompt}>$ </span>whoami</p>
                 <p className={eggStyles.secret}>"someone who reads everything."</p>
-                <p><span className={eggStyles.cm}>{'// respect. ทำให้เสร็จก่อนนะ'}</span></p>
+                <p><span className={eggStyles.cm}>{'// respect. โอเครเพื่อน นายสุดยอดมาก'}</span></p>
                 <p><span className={eggStyles.prompt}>$ </span><span className={eggStyles.blink}>_</span></p>
             </EggPopup>
         </EggOverlay>
     );
 }
 
-// ─────────────────────────────────────────
-// Easter Egg 3 — Konami Code → Rickroll redirect
-// ─────────────────────────────────────────
 function EasterEgg3({ active, onClose }) {
     const [countdown, setCountdown] = useState(5);
 
@@ -202,16 +190,13 @@ function EasterEgg3({ active, onClose }) {
                     "redirecting in {countdown}s...<br />
                     you asked for this."
                 </p>
-                <p><span className={eggStyles.cm}>{'// กด ESC ถ้ากล้า'}</span></p>
+                <p><span className={eggStyles.cm}>{'// กด ESC สิถ้านายกล้ามากพอ'}</span></p>
                 <p><span className={eggStyles.prompt}>$ </span><span className={eggStyles.blink}>_</span></p>
             </EggPopup>
         </EggOverlay>
     );
 }
 
-// ─────────────────────────────────────────
-// Easter Egg 4 — double-click progress bar → message from future
-// ─────────────────────────────────────────
 function EasterEgg4({ active, onClose }) {
     return (
         <EggOverlay active={active} onClose={onClose}>
@@ -236,25 +221,205 @@ function EasterEgg4({ active, onClose }) {
     );
 }
 
-// ─────────────────────────────────────────
-// Main Component
-// ─────────────────────────────────────────
+function EasterEgg5({ active, onClose }) {
+    const [chosen, setChosen] = useState(null);
+    const ANSWER = 2027;
+    const OPTIONS = [2025, 2026, 2027];
+
+    useEffect(() => {
+        if (!active) setChosen(null);
+    }, [active]);
+
+    return (
+        <EggOverlay active={active} onClose={onClose}>
+            <EggPopup title="quiz.exe — launch_year.unknown" onClose={onClose}>
+                <p><span className={eggStyles.ok}>[HELP]</span> distress signal received</p>
+                <p><span className={eggStyles.cm}>{"// คนนี้พิมพ์ help จริงๆ เหรอ ..."}</span></p>
+                <p><span className={eggStyles.prompt}>$ </span>run quiz --topic=launch_date</p>
+                <p style={{ color: "#e8ffe8", fontSize: "13px", marginTop: 4 }}>
+                    ตอบให้ถูก: เว็บ aiyulis จะเสร็จปีไหน?
+                </p>
+                <div className={eggStyles.quizOptions}>
+                    {OPTIONS.map((opt) => (
+                        <button
+                            key={opt}
+                            className={[
+                                eggStyles.quizBtn,
+                                chosen === null ? "" :
+                                    opt === ANSWER ? eggStyles.quizCorrect :
+                                        opt === chosen ? eggStyles.quizWrong : "",
+                            ].join(" ")}
+                            disabled={chosen !== null}
+                            onClick={() => setChosen(opt)}
+                        >
+                            {opt === chosen && chosen !== ANSWER && "✗ "}
+                            {opt === ANSWER && chosen !== null && "✓ "}
+                            {opt}
+                        </button>
+                    ))}
+                </div>
+                {chosen === ANSWER && (
+                    <p className={eggStyles.secret}>
+                        "ถูกต้อง. badge: early_believer unlocked.<br />
+                        ขอบคุณที่ยังรออยู่."
+                    </p>
+                )}
+                {chosen !== null && chosen !== ANSWER && (
+                    <p style={{ color: "#ff3355", fontSize: "12px" }}>
+                        <span className={eggStyles.prompt}>$ </span>
+                        wrong. try again? <span className={eggStyles.blink}>_</span>
+                    </p>
+                )}
+                <p><span className={eggStyles.prompt}>$ </span><span className={eggStyles.blink}>_</span></p>
+            </EggPopup>
+        </EggOverlay>
+    );
+}
+
+function EasterEgg6({ active, onClose, isMidnight }) {
+    return (
+        <EggOverlay active={active} onClose={onClose}>
+            <EggPopup
+                title={isMidnight ? "midnight_mode.log" : "time_check.log"}
+                onClose={onClose}
+            >
+                {isMidnight ? (
+                    <>
+                        <p><span className={eggStyles.ok}>[MIDNIGHT]</span> you found it. respect.</p>
+                        <p><span className={eggStyles.cm}>{"// ตอนตี 12 ยังเปิดเว็บนี้อยู่เหรอ นายโอเคมั้ย"}</span></p>
+                        <p><span className={eggStyles.prompt}>$ </span>cat /secret/midnight.txt</p>
+                        <div className={eggStyles.loreText}>
+                            03 midnight override — access granted<br />
+                            only night owls reach this line.<br />
+                            the dev is probably also awake right now.<br />
+                            สู้ๆ นะ คนขยัน
+                        </div>
+                        <p><span className={eggStyles.ok}>[UNLOCK]</span> night_owl.badge — stored</p>
+                    </>
+                ) : (
+                    <>
+                        <p><span className={eggStyles.warn}>[WARN]</span> too early. or too late.</p>
+                        <p><span className={eggStyles.cm}>{"// ยังไม่ถึงเวลา secret นี้"}</span></p>
+                        <p><span className={eggStyles.prompt}>$ </span>check --time</p>
+                        <p className={eggStyles.secret}>
+                            "come back at midnight (Bangkok time).<br />
+                            00:00 — 00:59.<br />
+                            แล้วลอง Alt+T อีกที"
+                        </p>
+                    </>
+                )}
+                <p><span className={eggStyles.prompt}>$ </span><span className={eggStyles.blink}>_</span></p>
+            </EggPopup>
+        </EggOverlay>
+    );
+}
+
+function EasterEgg7({ active, onClose }) {
+    return (
+        <EggOverlay active={active} onClose={onClose}>
+            <EggPopup title="transmission_unknown.log" onClose={onClose}>
+                <p><span className={eggStyles.warn}>[RECV]</span> signal from: dev_B — unverified</p>
+                <p><span className={eggStyles.cm}>{"// ไม่รู้ว่าใครส่งมา แต่มันมา"}</span></p>
+                <p><span className={eggStyles.prompt}>$ </span>decrypt --force</p>
+                <div className={eggStyles.loreText}>
+                    to whoever is reading this—<br /><br />
+                    i was the one who helped debug the countdown.<br />
+                    teeprakorn never asked me to leave a message.<br />
+                    but the status dot was always mine to hide things in.<br /><br />
+                    ถ้านายเห็นข้อความนี้<br />
+                    แปลว่านายช่างสังเกตมากกว่าคนส่วนใหญ่<br /><br />
+                    — dev_B, somewhere in the stack
+                </div>
+                <p><span className={eggStyles.warn}>[WARN]</span> sender identity unresolved.</p>
+                <p><span className={eggStyles.prompt}>$ </span><span className={eggStyles.blink}>_</span></p>
+            </EggPopup>
+        </EggOverlay>
+    );
+}
+
+function EasterEgg8({ active, onClose }) {
+    return (
+        <EggOverlay active={active} onClose={onClose}>
+            <EggPopup title="404.log — this is fine" onClose={onClose}>
+                <p><span className={eggStyles.warn}>[404]</span> easter egg not found</p>
+                <p><span className={eggStyles.cm}>{"// wait—"}</span></p>
+                <div className={eggStyles.innerPopup}>
+                    [404] easter egg inside easter egg not found<br />
+                    <span style={{ color: "#ff335599", fontSize: "10px" }}>
+                        {"// this is recursion. you did this."}
+                    </span>
+                    <div style={{
+                        marginTop: 8,
+                        padding: "6px 10px",
+                        border: "1px solid #ff335533",
+                        fontSize: "10px",
+                        color: "#ff335577",
+                    }}>
+                        [404] easter egg inside easter egg inside easter egg not found<br />
+                        <span style={{ fontSize: "9px", opacity: 0.5 }}>{"// ..."}</span>
+                    </div>
+                </div>
+                <p className={eggStyles.secret}>
+                    "นายพิมพ์ 404 บนหน้า 404.<br />
+                    ขอชื่นชมความ sigma ในตัวนายเลย."
+                </p>
+                <p><span className={eggStyles.ok}>[OK]</span> recursion_enjoyer.badge — granted</p>
+                <p><span className={eggStyles.prompt}>$ </span><span className={eggStyles.blink}>_</span></p>
+            </EggPopup>
+        </EggOverlay>
+    );
+}
+
+function EasterEgg9({ active, onClose }) {
+    return (
+        <EggOverlay active={active} onClose={onClose}>
+            <EggPopup
+                title="project_codename.classified"
+                closeLabel="[ ESC ] seal the file"
+                onClose={onClose}
+            >
+                <p><span className={eggStyles.warn}>[CLASSIFIED]</span> clearance level: curious</p>
+                <p><span className={eggStyles.cm}>{"// นายคลิกสามทีติดกัน นายโอเคมั้ย"}</span></p>
+                <p><span className={eggStyles.prompt}>$ </span>cat /vault/codename.txt</p>
+                <div className={eggStyles.codename}>PROJECT AIYULIS</div>
+                <div className={eggStyles.devNote}>
+                    เริ่มคิดตั้งแต่ปี 2003<br />
+                    ยังไม่เสร็จในปี 2026<br />
+                    แต่ทุก commit มันนับ<br />
+                    ทุก pixel มันสำคัญ<br /><br />
+                    ถ้านายอ่านถึงบรรทัดนี้ —<br />
+                    นายคือคนที่เว็บนี้สร้างมาเพื่อ
+                </div>
+                <p><span className={eggStyles.ok}>[OK]</span> vault access logged. welcome.</p>
+                <p><span className={eggStyles.prompt}>$ </span><span className={eggStyles.blink}>_</span></p>
+            </EggPopup>
+        </EggOverlay>
+    );
+}
+
 export default function ComingSoon() {
     const [t, setT] = useState(getCountdown());
     const [clock, setClock] = useState(getThaiTime());
     const [prevS, setPrevS] = useState(t.s);
     const [tickAnim, setTickAnim] = useState(false);
     const cursorRef = useRef(null);
-
-    // Easter egg states
     const [egg1Active, setEgg1Active] = useState(false);
     const [egg2Active, setEgg2Active] = useState(false);
     const [egg3Active, setEgg3Active] = useState(false);
     const [egg4Active, setEgg4Active] = useState(false);
+    const [egg5Active, setEgg5Active] = useState(false);
+    const [egg6Active, setEgg6Active] = useState(false);
+    const [egg7Active, setEgg7Active] = useState(false);
+    const [egg8Active, setEgg8Active] = useState(false);
+    const [egg9Active, setEgg9Active] = useState(false);
+
     const [titleCursed, setTitleCursed] = useState(false);
     const [clickCount, setClickCount] = useState(0);
+    const [isMidnight, setIsMidnight] = useState(false);
 
-    // Countdown + clock
+    const hoverTimerRef = useRef(null);
+    const tripleClickRef = useRef({ count: 0, timer: null });
+
     useEffect(() => {
         const id = setInterval(() => {
             const next = getCountdown();
@@ -269,7 +434,6 @@ export default function ComingSoon() {
         return () => clearInterval(id);
     }, [prevS]);
 
-    // Custom cursor
     useEffect(() => {
         const el = cursorRef.current;
         if (!el) return;
@@ -281,7 +445,6 @@ export default function ComingSoon() {
         return () => window.removeEventListener("mousemove", move);
     }, []);
 
-    // Egg 1 — type "aiyulis"
     useEffect(() => {
         let buffer = "";
         const handleKey = (e) => {
@@ -295,7 +458,6 @@ export default function ComingSoon() {
         return () => window.removeEventListener("keydown", handleKey);
     }, []);
 
-    // Egg 3 — Konami Code
     useEffect(() => {
         const KONAMI = [
             "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
@@ -318,7 +480,6 @@ export default function ComingSoon() {
         return () => window.removeEventListener("keydown", handleKey);
     }, []);
 
-    // Egg 5 — hold F for 3s → cursed title for 5s then revert
     useEffect(() => {
         let fTimer = null;
         let revertTimer = null;
@@ -347,10 +508,68 @@ export default function ComingSoon() {
         };
     }, []);
 
+    useEffect(() => {
+        let buffer = "";
+        const handleKey = (e) => {
+            buffer = (buffer + e.key).slice(-4);
+            if (buffer.toLowerCase() === "help") {
+                setEgg5Active(true);
+                buffer = "";
+            }
+        };
+        window.addEventListener("keydown", handleKey);
+        return () => window.removeEventListener("keydown", handleKey);
+    }, []);
+
+    useEffect(() => {
+        const handleKey = (e) => {
+            if (e.altKey && (e.key === "t" || e.key === "T")) {
+                const hour = new Date().toLocaleString("en-US", {
+                    timeZone: "Asia/Bangkok",
+                    hour: "numeric",
+                    hour12: false,
+                });
+                setIsMidnight(Number(hour) === 0);
+                setEgg6Active(true);
+            }
+        };
+        window.addEventListener("keydown", handleKey);
+        return () => window.removeEventListener("keydown", handleKey);
+    }, []);
+
+    useEffect(() => {
+        let buffer = "";
+        const handleKey = (e) => {
+            buffer = (buffer + e.key).slice(-3);
+            if (buffer === "404") {
+                setEgg8Active(true);
+                buffer = "";
+            }
+        };
+        window.addEventListener("keydown", handleKey);
+        return () => window.removeEventListener("keydown", handleKey);
+    }, []);
+
+    const handleDotEnter = () => {
+        hoverTimerRef.current = setTimeout(() => setEgg7Active(true), 3000);
+    };
+    const handleDotLeave = () => clearTimeout(hoverTimerRef.current);
+
+    const handleProgressClick = () => {
+        const ref = tripleClickRef.current;
+        ref.count += 1;
+        clearTimeout(ref.timer);
+        if (ref.count >= 3) {
+            setEgg9Active(true);
+            ref.count = 0;
+        } else {
+            ref.timer = setTimeout(() => { ref.count = 0; }, 500);
+        }
+    };
+
     const grow = () => cursorRef.current?.classList.add(styles.big);
     const shrink = () => cursorRef.current?.classList.remove(styles.big);
 
-    // Egg 2 — click title 5x
     const handleTitleClick = () => {
         const next = clickCount + 1;
         setClickCount(next);
@@ -364,33 +583,35 @@ export default function ComingSoon() {
 
     return (
         <>
-            {/* ── SEO via react-helmet-async ── */}
             <Helmet>
                 <html lang="th" />
                 <title>Aiyulis Webpage</title>
                 <meta name="description" content="เว็บของ aiyulis กำลังจะมา ยังไม่เสร็จ แต่ยังมีชีวิตอยู่ — github.com/teeprakorn1" />
                 <meta name="author" content="teeprakorn1" />
                 <meta name="robots" content="index, follow" />
-                <link rel="canonical" href="https://aiyulis.dev/" />
+                <link rel="canonical" href="https://aiyulis.com/" />
                 <meta property="og:type" content="website" />
-                <meta property="og:url" content="https://aiyulis.dev/" />
+                <meta property="og:url" content="https://aiyulis.com/" />
                 <meta property="og:title" content="aiyulis — Webpage" />
                 <meta property="og:description" content="เว็บกำลังจะมา ยังไม่เสร็จ แต่ยังมีชีวิตอยู่" />
-                <meta property="og:image" content="https://aiyulis.dev/og-image.png" />
+                <meta property="og:image" content="https://aiyulis.com/og-image.png" />
                 <meta property="og:locale" content="th_TH" />
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:title" content="aiyulis — Webpage" />
                 <meta name="twitter:description" content="เว็บกำลังจะมา ยังไม่เสร็จ แต่ยังมีชีวิตอยู่" />
-                <meta name="twitter:image" content="https://aiyulis.dev/og-image.png" />
+                <meta name="twitter:image" content="https://aiyulis.com/og-image.png" />
             </Helmet>
 
             <div ref={cursorRef} className={styles.cursor} aria-hidden="true" />
-
-            {/* Easter Eggs */}
             <EasterEgg1 active={egg1Active} onClose={() => setEgg1Active(false)} />
             <EasterEgg2 active={egg2Active} onClose={() => setEgg2Active(false)} />
             <EasterEgg3 active={egg3Active} onClose={() => setEgg3Active(false)} />
             <EasterEgg4 active={egg4Active} onClose={() => setEgg4Active(false)} />
+            <EasterEgg5 active={egg5Active} onClose={() => setEgg5Active(false)} />
+            <EasterEgg6 active={egg6Active} onClose={() => setEgg6Active(false)} isMidnight={isMidnight} />
+            <EasterEgg7 active={egg7Active} onClose={() => setEgg7Active(false)} />
+            <EasterEgg8 active={egg8Active} onClose={() => setEgg8Active(false)} />
+            <EasterEgg9 active={egg9Active} onClose={() => setEgg9Active(false)} />
 
             <main className={styles.scene} role="main">
                 <div className={styles.gridBg} aria-hidden="true" />
@@ -518,8 +739,6 @@ export default function ComingSoon() {
                             )
                         )}
                     </div>
-
-                    {/* Progress bar — double click triggers Egg 4 */}
                     <div
                         className={styles.progressWrap}
                         role="progressbar"
@@ -528,6 +747,7 @@ export default function ComingSoon() {
                         aria-valuemax={100}
                         aria-label="Launch progress"
                         onDoubleClick={() => setEgg4Active(true)}
+                        onClick={handleProgressClick}
                         style={{ cursor: "none" }}
                     >
                         <div className={styles.progressTrack}>
@@ -562,10 +782,14 @@ export default function ComingSoon() {
                     </div>
 
                 </div>
-
-                {/* Status */}
                 <div className={styles.status} aria-live="polite">
-                    <div className={styles.statusDot} aria-hidden="true" />
+                    <div
+                        className={styles.statusDot}
+                        aria-hidden="true"
+                        onMouseEnter={handleDotEnter}
+                        onMouseLeave={handleDotLeave}
+                        style={{ cursor: "none" }}
+                    />
                     <span>PROCESS RUNNING... NO ETA</span>
                 </div>
 
